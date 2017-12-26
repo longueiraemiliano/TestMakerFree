@@ -7,5 +7,5 @@
 })
 
 export class QuizComponent {
-    @Input() quiz: Quiz;
+    @Input("quiz") quiz: Quiz;
 }

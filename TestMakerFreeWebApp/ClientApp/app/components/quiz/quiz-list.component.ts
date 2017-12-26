@@ -1,4 +1,4 @@
-﻿import { Component, Inject, Input } from "@angular/core";
+﻿import { Component, Inject, Input, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
 @Component({
@@ -7,19 +7,26 @@ import { HttpClient } from "@angular/common/http";
     styleUrls: ['./quiz-list.component.css']
 })
 
-export class QuizListComponent {
+export class QuizListComponent implements OnInit {
     title: string;
     selectedQuiz: Quiz;
     quizzes: Quiz[];
     @Input() class: string;
 
-    constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-        var url = baseUrl + "/api/quiz/";
+    constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) { }
+
+    ngOnInit() {
+        console.log("QuizListComponent " +
+            " instantiated with the following class: "
+            + this.class);
+
+        var url = this.baseUrl + "api/quiz/";
 
         switch (this.class) {
             case "latest":
+            default:
                 this.title = "Latest Quizzes";
-                url += "Latest";
+                url += "Latest/";
                 break;
             case "byTitle":
                 this.title = "Quizzes by Title";
@@ -31,14 +38,12 @@ export class QuizListComponent {
                 break;
         }
 
-        http.get<Quiz[]>(baseUrl).subscribe(result => {
+        this.http.get<Quiz[]>(url).subscribe(result => {
             this.quizzes = result;
-        }, error => {
-            console.error(error);
-        });
+        }, error => console.error(error));
     }
 
-    onSelectQuiz(quiz: Quiz) {
+    onSelect(quiz: Quiz) {
         this.selectedQuiz = quiz;
         console.log("quiz with Id: " + quiz.Id + " Title: " + quiz.Title);
     }
