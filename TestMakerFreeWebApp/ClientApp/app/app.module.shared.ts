@@ -33,9 +33,9 @@ import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.co
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
-            { path: 'quiz/:id', component: QuizComponent },
             { path: 'quiz/create', component: QuizEditComponent },
             { path: 'quiz/edit/:id', component: QuizEditComponent },
+            { path: 'quiz/:id', component: QuizComponent },            
             { path: 'about', component: AboutComponent },
             { path: 'login', component: LoginComponent },
             { path: '**', component: PageNotFoundComponent }

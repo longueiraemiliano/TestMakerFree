@@ -19,7 +19,7 @@ export class QuizEditComponent {
 
         if (id) {
             this.editMode = true;
-            var url = this.baseUrl + "api/quiz" + id;
+            var url = this.baseUrl + "api/quiz/" + id;
             this.httpClient.get<Quiz>(url).subscribe(res => {
                 this.quiz = res;
                 this.title = "Edit - " + this.quiz.Title;
