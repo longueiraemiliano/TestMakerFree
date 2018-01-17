@@ -9,29 +9,18 @@ using Mapster;
 
 namespace TestMakerFreeWebApp.Controllers
 {
-    [Route("api/[controller]")]
-    public class QuestionController : Controller
+    public class QuestionController : BaseApiController
     {
-        private ApplicationDbContext dbContext;
-
-        public QuestionController(ApplicationDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        public QuestionController(ApplicationDbContext context) : base(context) { }
 
         // GET api/question/all 
         [HttpGet("All/{quizId}")]
         public IActionResult All(int quizId)
         {
-            var questions = dbContext.Questions.Where(q => q.QuizId == quizId).ToArray();
+            var questions = DbContext.Questions.Where(q => q.QuizId == quizId).ToArray();
 
             // output the result in JSON format 
-            return new JsonResult(
-                questions.Adapt<QuestionViewModel[]>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(questions.Adapt<QuestionViewModel[]>(), JsonSettings);
         }
 
         #region RESTful conventions methods 
@@ -43,7 +32,7 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var question = dbContext.Questions.Where(q => q.Id == id).FirstOrDefault();
+            var question = DbContext.Questions.Where(q => q.Id == id).FirstOrDefault();
 
             if (question == null)
             {
@@ -53,10 +42,7 @@ namespace TestMakerFreeWebApp.Controllers
                 });
             }
 
-            return new JsonResult(
-                question.Adapt<QuestionViewModel>(),
-                new JsonSerializerSettings() { Formatting = Formatting.Indented }
-            );
+            return new JsonResult(question.Adapt<QuestionViewModel>(), JsonSettings);
         }
 
         /// <summary> 
@@ -82,16 +68,12 @@ namespace TestMakerFreeWebApp.Controllers
             question.LastModifiedDate = question.CreatedDate;
 
             // add the new question
-            dbContext.Questions.Add(question);
+            DbContext.Questions.Add(question);
             // persist the changes into the Database.
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // return the newly-created Question to the client.
-            return new JsonResult(question.Adapt<QuestionViewModel>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(question.Adapt<QuestionViewModel>(), JsonSettings);
         }
 
         /// <summary> 
@@ -106,7 +88,7 @@ namespace TestMakerFreeWebApp.Controllers
             if (model == null) return new StatusCodeResult(500);
 
             // retrieve the question to edit
-            var question = dbContext.Questions.Where(q => q.Id == model.Id).FirstOrDefault();
+            var question = DbContext.Questions.Where(q => q.Id == model.Id).FirstOrDefault();
 
             // handle requests asking for non-existing questions
             if (question == null)
@@ -128,14 +110,10 @@ namespace TestMakerFreeWebApp.Controllers
             question.LastModifiedDate = question.CreatedDate;
 
             // persist the changes into the Database.
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // return the updated Quiz to the client.
-            return new JsonResult(question.Adapt<QuestionViewModel>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(question.Adapt<QuestionViewModel>(), JsonSettings);
         }
 
         /// <summary> 
@@ -146,7 +124,7 @@ namespace TestMakerFreeWebApp.Controllers
         public IActionResult Delete(int id)
         {
             // retrieve the question from the Database
-            var question = dbContext.Questions.Where(i => i.Id == id).FirstOrDefault();
+            var question = DbContext.Questions.Where(i => i.Id == id).FirstOrDefault();
 
             // handle requests asking for non-existing questions
             if (question == null)
@@ -158,9 +136,9 @@ namespace TestMakerFreeWebApp.Controllers
             }
 
             // remove the quiz from the DbContext.
-            dbContext.Questions.Remove(question);
+            DbContext.Questions.Remove(question);
             // persist the changes into the Database.
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // return an HTTP Status 200 (OK).
             return new OkResult();

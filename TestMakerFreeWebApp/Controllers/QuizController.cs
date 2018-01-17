@@ -12,15 +12,9 @@ using TestMakerFreeWebApp.Data.Models;
 
 namespace TestMakerFreeWebApp.Controllers
 {
-    [Route("api/[controller]")]
-    public class QuizController : Controller
+    public class QuizController : BaseApiController
     {
-        private ApplicationDbContext dbContext;
-
-        public QuizController(ApplicationDbContext dbContext)
-        {
-            this.dbContext = dbContext;
-        }
+        public QuizController(ApplicationDbContext context) : base(context) { }
 
         #region RESTful conventions methods 
         /// <summary> 
@@ -32,7 +26,7 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var quiz = dbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
+            var quiz = DbContext.Quizzes.Where(q => q.Id == id).FirstOrDefault();
 
             // handle requests asking for non-existing quizzes
             if (quiz == null)
@@ -44,12 +38,7 @@ namespace TestMakerFreeWebApp.Controllers
             }
 
             // output the result in JSON format 
-            return new JsonResult(
-                quiz.Adapt<QuizViewModel>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
         }
         #endregion
 
@@ -63,15 +52,10 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("Latest/{num:int?}")]
         public IActionResult Latest(int num = 10)
         {
-            var quizzes = dbContext.Quizzes.OrderByDescending(q => q.CreatedDate).Take(num).ToArray();
+            var quizzes = DbContext.Quizzes.OrderByDescending(q => q.CreatedDate).Take(num).ToArray();
             
             // output the result in JSON format 
-            return new JsonResult(
-                quizzes.Adapt<QuizViewModel[]>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(quizzes.Adapt<QuizViewModel[]>(), JsonSettings);
         }
         #endregion
 
@@ -84,14 +68,9 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("ByTitle/{num:int?}")]
         public IActionResult ByTitle(int num = 10)
         {
-            var quizzes = dbContext.Quizzes.OrderBy(q => q.Title).Take(num).ToArray();
+            var quizzes = DbContext.Quizzes.OrderBy(q => q.Title).Take(num).ToArray();
 
-            return new JsonResult(
-                quizzes.Adapt<QuizViewModel[]>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(quizzes.Adapt<QuizViewModel[]>(), JsonSettings);
         }
 
         /// <summary>
@@ -103,16 +82,11 @@ namespace TestMakerFreeWebApp.Controllers
         [HttpGet("Random/{num:int?}")]
         public IActionResult Random(int num = 10)
         {
-            var random = dbContext.Quizzes
+            var random = DbContext.Quizzes
                 .OrderBy(q => Guid.NewGuid())
                 .Take(num)
                 .ToArray();
-            return new JsonResult(
-                random.Adapt<QuizViewModel[]>(),
-                new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                });
+            return new JsonResult(random.Adapt<QuizViewModel[]>(), JsonSettings);
         }
         
         #region
@@ -142,20 +116,16 @@ namespace TestMakerFreeWebApp.Controllers
 
             // Set a temporary author using the Admin user's userId
             // as user login isn't supported yet: we'll change this later on.
-            quiz.UserId = dbContext.Users.Where(u => u.UserName == "Admin")
+            quiz.UserId = DbContext.Users.Where(u => u.UserName == "Admin")
                 .FirstOrDefault().Id;
 
             // add the new quiz
-            dbContext.Quizzes.Add(quiz);
+            DbContext.Quizzes.Add(quiz);
             // persist the changes into the Database.
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // return the newly-created Quiz to the client.
-            return new JsonResult(quiz.Adapt<QuizViewModel>(),
-                        new JsonSerializerSettings()
-                        {
-                            Formatting = Formatting.Indented
-                        });
+            return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
         }
 
         /// <summary> 
@@ -170,7 +140,7 @@ namespace TestMakerFreeWebApp.Controllers
             if (model == null) return new StatusCodeResult(500);
 
             // retrieve the quiz to edit
-            var quiz = dbContext.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
+            var quiz = DbContext.Quizzes.Where(q => q.Id == model.Id).FirstOrDefault();
 
             // handle requests asking for non-existing quizzes
             if (quiz == null)
@@ -194,14 +164,10 @@ namespace TestMakerFreeWebApp.Controllers
             quiz.LastModifiedDate = quiz.CreatedDate;
 
             // persist the changes into the Database.
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // return the updated Quiz to the client.
-            return new JsonResult(quiz.Adapt<QuizViewModel>(),
-                        new JsonSerializerSettings()
-                        {
-                            Formatting = Formatting.Indented
-                        });
+            return new JsonResult(quiz.Adapt<QuizViewModel>(), JsonSettings);
         }
 
         /// <summary> 
@@ -212,7 +178,7 @@ namespace TestMakerFreeWebApp.Controllers
         public IActionResult Delete(int id)
         {
             // retrieve the quiz from the Database
-            var quiz = dbContext.Quizzes.Where(i => i.Id == id)
+            var quiz = DbContext.Quizzes.Where(i => i.Id == id)
                 .FirstOrDefault();
 
             // handle requests asking for non-existing quizzes
@@ -225,9 +191,9 @@ namespace TestMakerFreeWebApp.Controllers
             }
 
             // remove the quiz from the DbContext.
-            dbContext.Quizzes.Remove(quiz);
+            DbContext.Quizzes.Remove(quiz);
             // persist the changes into the Database.
-            dbContext.SaveChanges();
+            DbContext.SaveChanges();
 
             // return an HTTP Status 200 (OK).
             return new OkResult();
