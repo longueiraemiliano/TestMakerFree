@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace TestMakerFreeWebApp.Data.Models
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         #region Constructor
         public ApplicationDbContext(DbContextOptions options) :
@@ -54,7 +54,6 @@ namespace TestMakerFreeWebApp.Data.Models
         #endregion Methods
 
         #region Properties
-        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Quiz> Quizzes { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
