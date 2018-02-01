@@ -7,6 +7,8 @@ using TestMakerFreeWebApp.ViewModels;
 using Newtonsoft.Json;
 using Mapster;
 using TestMakerFreeWebApp.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,7 +16,8 @@ namespace TestMakerFreeWebApp.Controllers
 {
     public class QuizController : BaseApiController
     {
-        public QuizController(ApplicationDbContext context) : base(context) { }
+        public QuizController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IConfiguration configuration)
+            : base(context, roleManager, userManager, configuration) { }
 
         #region RESTful conventions methods 
         /// <summary> 
@@ -53,7 +56,7 @@ namespace TestMakerFreeWebApp.Controllers
         public IActionResult Latest(int num = 10)
         {
             var quizzes = DbContext.Quizzes.OrderByDescending(q => q.CreatedDate).Take(num).ToArray();
-            
+
             // output the result in JSON format 
             return new JsonResult(quizzes.Adapt<QuizViewModel[]>(), JsonSettings);
         }
@@ -88,7 +91,7 @@ namespace TestMakerFreeWebApp.Controllers
                 .ToArray();
             return new JsonResult(random.Adapt<QuizViewModel[]>(), JsonSettings);
         }
-        
+
         #region
         /// <summary> 
         /// Adds a new Answer to the Database 

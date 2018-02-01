@@ -6,13 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using Mapster;
 using TestMakerFreeWebApp.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TestMakerFreeWebApp.Controllers
 {
     public class AnswerController : BaseApiController
     {
         #region Constructor
-        public AnswerController(ApplicationDbContext context) : base(context) { }
+        public AnswerController(ApplicationDbContext context,
+                                RoleManager<IdentityRole> roleManager,
+                                UserManager<ApplicationUser> userManager,
+                                IConfiguration configuration)
+        : base(context, roleManager, userManager, configuration) { }
         #endregion
 
         #region RESTful conventions methods

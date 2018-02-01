@@ -6,12 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using TestMakerFreeWebApp.Data.Models;
 using Mapster;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 
 namespace TestMakerFreeWebApp.Controllers
 {
     public class QuestionController : BaseApiController
     {
-        public QuestionController(ApplicationDbContext context) : base(context) { }
+        public QuestionController(ApplicationDbContext context,
+                                    RoleManager<IdentityRole> roleManager,
+                                    UserManager<ApplicationUser> userManager,
+                                    IConfiguration configuration)
+        : base(context, roleManager, userManager, configuration) { }
 
         // GET api/question/all 
         [HttpGet("All/{quizId}")]
