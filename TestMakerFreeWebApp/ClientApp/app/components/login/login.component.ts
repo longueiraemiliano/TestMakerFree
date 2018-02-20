@@ -36,12 +36,12 @@ export class LoginComponent {
 
                 // outputs the login info through a JS alert.
                 // IMPORTANT: remove this when test is done.
-                alert("Login successful! "
+                /*alert("Login successful! "
                     + "USERNAME: "
                     + username
                     + " TOKEN: "
                     + this.authService.getAuth()!.token
-                );
+                );*/
 
                 this.router.navigate(["home"]);
             },

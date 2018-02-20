@@ -15,7 +15,7 @@ export class AuthService {
 
     // performs the login
     login(username: string, password: string): Observable<boolean> {
-        var url = this.baseUrl + "api/auth/jwt";
+        var url = this.baseUrl + "api/token/auth";
         var data = {
             username: username,
             password: password,
