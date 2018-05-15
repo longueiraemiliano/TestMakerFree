@@ -55,6 +55,7 @@
     <None Remove="ClientApp\app\interfaces\quiz.ts" />
     <None Remove="ClientApp\app\components\pagenotfound\pagenotfound.component.ts" />
     <None Remove="ClientApp\app\interfaces\result.ts" />
+    <None Remove="ClientApp\app\services\auth.interceptor.ts" />
     <None Remove="ClientApp\app\services\auth.service.ts" />
     <None Remove="ClientApp\app\services\token.response.ts" />
   </ItemGroup>
@@ -78,6 +79,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\pagenotfound\pagenotfound.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\interfaces\result.ts" />
     <TypeScriptCompile Include="ClientApp\app\interfaces\token.response.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\auth.interceptor.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\auth.service.ts" />
   </ItemGroup>
 

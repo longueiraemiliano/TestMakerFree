@@ -1,6 +1,7 @@
 ﻿import { Component, Input, Inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: "quiz",
@@ -11,7 +12,7 @@ import { HttpClient } from "@angular/common/http";
 export class QuizComponent {
     quiz: Quiz;
 
-    constructor(private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
+    constructor(public auth: AuthService, private activatedRoute: ActivatedRoute, private router: Router, private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
         this.quiz = <Quiz>{};
         
         var id = +this.activatedRoute.snapshot.params["id"];
