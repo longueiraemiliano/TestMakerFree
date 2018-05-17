@@ -19,13 +19,10 @@ export class AuthResponseInterceptor implements HttpInterceptor {
         private router: Router
     ) { }
 
-    intercept(
-        request: HttpRequest<any>,
-        next: HttpHandler): Observable<HttpEvent<any>> {
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         this.auth = this.injector.get(AuthService);
-        var token = (this.auth.isLoggedIn()) ?
-            this.auth.getAuth()!.token : null;
+        var token = (this.auth.isLoggedIn()) ? this.auth.getAuth()!.token : null;
 
         if (token) {
             // save current request
@@ -66,8 +63,7 @@ export class AuthResponseInterceptor implements HttpInterceptor {
                                     // do something
                                 }, (error: any) => { console.error(error); }
                             );
-                        }
-                        else {
+                        } else {
                             // refresh token failed
                             console.log("refresh token failed");
 
@@ -82,6 +78,7 @@ export class AuthResponseInterceptor implements HttpInterceptor {
                     });
             }
         }
+
         return Observable.throw(err);
     }
 }
