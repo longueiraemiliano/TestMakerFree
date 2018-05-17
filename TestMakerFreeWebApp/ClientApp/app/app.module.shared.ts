@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AuthService } from "./services/auth.service";
 import { AuthInterceptor } from './services/auth.interceptor';
+import { AuthResponseInterceptor } from './services/auth.response.interceptor';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -69,6 +70,11 @@ import { PageNotFoundComponent } from './components/pagenotfound/pagenotfound.co
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
+            multi: true
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthResponseInterceptor,
             multi: true
         }
     ]

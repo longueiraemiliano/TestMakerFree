@@ -39,6 +39,11 @@ namespace TestMakerFreeWebApp.Data.Models
         /// A list of all the quiz created by this users.
         /// </summary>
         public virtual List<Quiz> Quizzes { get; set; }
+
+        /// <summary>
+        /// A list of all the refresh tokens issued for this users.
+        /// </summary>
+        public virtual List<Token> Tokens { get; set; }
         #endregion
     }
 }
